@@ -1,3 +1,4 @@
+import 'package:firebase_example1/forget_password.dart';
 import 'package:firebase_example1/toast_message.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -81,7 +82,7 @@ class _Login_pageState extends State<Login_page> {
                     ),
                   ),
                 )),
-          ),
+          ),SizedBox(height: mheight*0.03,),TextButton(onPressed: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext a)=>FotgetPassword())), child: Text('Forgot Password',style: TextStyle(color: Colors.purple,fontWeight: FontWeight.w500),))
         ],
       ),
     );

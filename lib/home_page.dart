@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_example1/see_all_post.dart';
+import 'package:firebase_example1/see_all_post_in_firestore.dart';
 import 'package:firebase_example1/toast_message.dart';
+import 'package:firebase_example1/upload_image.dart';
 import 'package:flutter/material.dart';
 
 class Home_screen extends StatefulWidget {
@@ -11,7 +14,7 @@ class Home_screen extends StatefulWidget {
 }
 
 TextEditingController post = TextEditingController();
-final databaseRef = FirebaseDatabase.instance.ref('post');
+final firestore = FirebaseFirestore.instance.collection('Post');
 
 class _Home_screenState extends State<Home_screen> {
   @override
@@ -45,12 +48,10 @@ class _Home_screenState extends State<Home_screen> {
           ),
           TextButton(
               onPressed: () {
-                databaseRef
-                    .child(DateTime.now().microsecondsSinceEpoch.toString())
-                    .set({
-                      'title': post.text,
-                      'id': DateTime.now().microsecondsSinceEpoch.toString()
-                    })
+                final id = DateTime.now().microsecondsSinceEpoch.toString();
+                firestore
+                    .doc(id)
+                    .set({'title': post.text, 'id': id})
                     .then((value) =>
                         {ToastMessage().toastmessage(message: 'Post Added')})
                     .onError((error, stackTrace) =>
@@ -73,11 +74,23 @@ class _Home_screenState extends State<Home_screen> {
           ),
           TextButton(
               onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext a) => Post_screen ())),
+                  builder: (BuildContext a) => Post_screen_firestore())),
               child: Text(
                 'See All Post',
-                style:
-                    TextStyle(color: Colors.purple, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: Colors.purple, fontWeight: FontWeight.w500),
+              )),
+          SizedBox(
+            height: mheight * 0.03,
+          ),
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext a)=>UploadImage()));
+              },
+              child: Text(
+                'Upload Your Image',
+                style: TextStyle(
+                    color: Colors.purple, fontWeight: FontWeight.w500),
               ))
         ],
       ),
